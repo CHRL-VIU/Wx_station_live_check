@@ -38,10 +38,7 @@ wx_stations = [x for x in wx_stations if not "legacy_ontree" in x] # remove lega
 wx_stations_name = list(map(lambda st: str.replace(st, 'clean_', ''), wx_stations)) # remove 'clean_' for csv export
 wx_stations_name = [wx_name.capitalize() for wx_name in wx_stations_name] # capitalise station name
 
-# remove previous CSV reports file from yesterday from server and create new one
-# matching today's date
-for filename in glob.glob("D:/Vancouver_Island_University/Wx_station/daily_report_VIU_hydromet_*"):
-    os.remove(filename) 
+# create csv filename with today's date on it
 csv_filename = 'daily_report_VIU_hydromet_' + datetime.datetime.now().strftime("%Y%m%d") + '.csv'
 
 # read SQL data from all 'clean' tables in the VIU SQL database and check for 
