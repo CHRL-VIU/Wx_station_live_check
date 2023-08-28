@@ -21,7 +21,7 @@ email_details = config_emails.email_login()
 def send_email(csv_filename, df):
     send_from = email_details[0]
     password = email_details[1]
-    send_to = ['bill.floyd@viu.ca','julien.bodart@viu.ca','sergey.marchenko@viu.ca']
+    send_to = ['bill.floyd@viu.ca','julien.bodart@viu.ca','anna.kaveney@viu.ca','sergey.marchenko@viu.ca']
     subject = 'VIU Hydromet weekly report'
     message = """\
     <p><body>This is a weekly automated message about the 
