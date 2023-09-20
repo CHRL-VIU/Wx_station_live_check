@@ -90,10 +90,10 @@ for i in range(0,len(wx_stations)):
         print(wx_stations_name[i] + ': only duplicate values found for sensor: ' + empty_cols)
         msg.loc[len(msg)] = (wx_stations_name[i], 'Only duplicate values found for sensors: ' + empty_cols)
        
-    # if battery is below 11.5 volts, warn!
-    if any(sql_files['Batt'] < 11.5) == True:
-        print(wx_stations_name[i] + ': battery is below 11.5 volts')
-        msg.loc[len(msg)] = (wx_stations_name[i], 'Battery is below 11.5 volts')
+    # if battery is below 12 volts, warn!
+    if any(sql_files['Batt'] < 12) == True:
+        print(wx_stations_name[i] + ': battery is below 12 volts')
+        msg.loc[len(msg)] = (wx_stations_name[i], 'Battery is below 12 volts')
         
     # if wind direction is > 360 degrees, warn!
     if any(sql_files['Wind_Dir'] > 360) == True:
