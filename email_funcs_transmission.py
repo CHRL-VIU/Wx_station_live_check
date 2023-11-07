@@ -5,7 +5,7 @@
 # This code defines the function 'send_email' which is used to send an email 
 # from viuhydromet@outlook.com address to a recipient to alert that data
 # is not transmitting (either satellite transmission issue or issue with codes 
-# that plot the data onto the VIU hydromet website) for at least the last 48 hours
+# that plot the data onto the VIU hydromet website) for at least the last 6 hours
 # Written by J. Bodart
 
 from email.mime.application import MIMEApplication
@@ -21,7 +21,7 @@ email_details = config_emails.email_login()
 def send_email(df):
     send_from = email_details[0]
     password = email_details[1]
-    subject = 'Alert transmission issue VIU hydromet'
+    subject = 'Alert transmission issue VIU hydromet - last 6 hours'
     message = """\
     <html>
       <head></head>
