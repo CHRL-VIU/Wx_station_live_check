@@ -32,7 +32,7 @@ def send_email(df):
     """.format(df.to_html(index=False, header=False))
     multipart = MIMEMultipart()
     multipart["From"] = send_from
-    multipart["To"] = "julien.bodart@viu.ca,anna.kaveney@viu.ca"
+    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca"
     multipart["Subject"] = subject  
     multipart.attach(MIMEText(message, "html"))
     server = smtplib.SMTP("smtp-mail.outlook.com", 587)
