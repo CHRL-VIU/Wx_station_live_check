@@ -3,8 +3,8 @@
 # version 1.0.0
 
 # This code reads in the SQL data from the Wx station on the VIU SQL database
-# and checks if the live (last 48 hours) data is transmitting correctly for 
-# all stations. If not, the code alerts users via e-mail. Repeats every 48hours
+# and checks if the live (last 6 hours) data is transmitting correctly for 
+# all stations. If not, the code alerts users via e-mail. Repeats every 6hours
 # Written by J. Bodart
 
 import pandas as pd 
@@ -55,34 +55,35 @@ sql_files = [] # initiate dataframes
 msg = pd.DataFrame(columns = ['Issue']) # initiate dataframes 
 for i in range(len(wx_stations)):
     # import SQL data for each Wx station and sort by date to only keep last 
-    # 48 entries (2 days worth of data)
+    # 6 entries
     
     print ('#### Checking live data for station file: ', wx_stations[i])
-    sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 48", con = engine)
+    sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 6", con = engine)
     
-    # calculate datetime for last 48 hours vs latest sql entry
-    now_date = (datetime.datetime.now()- datetime.timedelta(days=2)).strftime("%Y-%m-%d %H:%M:%S")
+    # calculate datetime for last 6 hours vs latest sql entry
+    now_date = (datetime.datetime.now()- datetime.timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S")
+    now_date = pd.to_datetime(now_date).floor('60min') # floor to round hour
     datetime_sql = str(sql_files['DateTime'].iloc[0])
     
     # replace None with nans in dataframe
     sql_files = sql_files.fillna(value=np.nan)
     
-    # if SQL does not have data for last 48 hours (i.e. there is a transmission
+    # if SQL does not have data for last 6 hours (i.e. there is a transmission
     # issue), warn!
-    if now_date.split(' ')[0] >= datetime_sql.split(' ')[0]:
-       msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 48 hours for: ' + wx_stations_name[i]
+    if str(now_date) >= datetime_sql:
+       msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 6 hours for: ' + wx_stations_name[i]
 
 # send email with report only if there is a transmission issue
 while True:
     if msg.empty:
-        print('No missing records - rechecking in 48 hours')  
+        print('No missing records - rechecking in 6 hours')  
         break
     else:
         print("Found issue with transmissions - sending report to email")
-        import email_funcs_48hours
-        email_funcs_48hours.send_email(msg)
+        import email_funcs_6hours
+        email_funcs_6hours.send_email(msg)
         break
 
 # write current time for sanity check
 current_dateTime = datetime.datetime.now()
-print("Done at:", current_dateTime, '- refreshing in 48 hours...')
+print("Done at:", current_dateTime, '- refreshing in 6 hours...')
