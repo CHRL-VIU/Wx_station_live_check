@@ -21,7 +21,6 @@ email_details = config_emails.email_login()
 def send_email(csv_filename, df):
     send_from = email_details[0]
     password = email_details[1]
-    send_to = ['bill.floyd@viu.ca','julien.bodart@viu.ca','anna.kaveney@viu.ca','sergey.marchenko@viu.ca']
     subject = 'VIU Hydromet weekly report'
     message = """\
     <p><body>This is a weekly automated message about the 
@@ -33,7 +32,7 @@ def send_email(csv_filename, df):
     """
     multipart = MIMEMultipart()
     multipart["From"] = send_from
-    multipart["To"] = ", ".join(send_to)
+    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca,sergey.marchenko@viu.ca"
     multipart["Subject"] = subject  
     attachment = MIMEApplication(df.to_csv(sep =',', index=False, index_label=None))
     attachment["Content-Disposition"] = "attachment; filename={}".format(csv_filename)
@@ -42,5 +41,5 @@ def send_email(csv_filename, df):
     server = smtplib.SMTP("smtp-mail.outlook.com", 587)
     server.starttls()
     server.login(multipart["From"], password)
-    server.sendmail(multipart["From"], multipart["To"], multipart.as_string())
+    server.sendmail(multipart["From"], multipart["To"].split(","), multipart.as_string())
     server.quit()
