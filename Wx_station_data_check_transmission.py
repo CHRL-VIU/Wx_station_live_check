@@ -80,8 +80,8 @@ while True:
         break
     else:
         print("Found issue with transmissions - sending report to email")
-        import email_funcs_6hours
-        email_funcs_6hours.send_email(msg)
+        import email_funcs_transmission
+        email_funcs_transmission.send_email(msg)
         break
 
 # write current time for sanity check
