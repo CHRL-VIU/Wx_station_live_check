@@ -21,7 +21,6 @@ email_details = config_emails.email_login()
 def send_email(df):
     send_from = email_details[0]
     password = email_details[1]
-    send_to = ['julien.bodart@viu.ca', 'anna.kaveney@viu.ca']
     subject = 'Alert transmission issue VIU hydromet'
     message = """\
     <html>
@@ -33,11 +32,11 @@ def send_email(df):
     """.format(df.to_html(index=False, header=False))
     multipart = MIMEMultipart()
     multipart["From"] = send_from
-    multipart["To"] = ", ".join(send_to)
+    multipart["To"] = "julien.bodart@viu.ca,anna.kaveney@viu.ca"
     multipart["Subject"] = subject  
     multipart.attach(MIMEText(message, "html"))
     server = smtplib.SMTP("smtp-mail.outlook.com", 587)
     server.starttls()
     server.login(multipart["From"], password)
-    server.sendmail(multipart["From"], multipart["To"], multipart.as_string())
+    server.sendmail(multipart["From"], multipart["To"].split(","), multipart.as_string())
     server.quit()
