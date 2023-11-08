@@ -71,7 +71,10 @@ for i in range(len(wx_stations)):
     # if SQL does not have data for last 6 hours (i.e. there is a transmission
     # issue), warn!
     if str(now_date) >= datetime_sql:
-       msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 6 hours for: ' + wx_stations_name[i]
+        print('Found issue with transmissions for file:', wx_stations[i])  
+        msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 6 hours for ' + wx_stations_name[i]
+    else:
+        print('No missing records for file:', wx_stations[i])  
 
 # send email with report only if there is a transmission issue
 while True:
