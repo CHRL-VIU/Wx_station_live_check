@@ -61,7 +61,8 @@ for i in range(len(wx_stations)):
     sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 6", con = engine)
     
     # calculate datetime for last 6 hours vs latest sql entry
-    now_date = (datetime.datetime.now()- datetime.timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S")
+    #now_date = (datetime.datetime.now()- datetime.timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S") # for python PST system
+    now_date = (datetime.datetime.now()- datetime.timedelta(hours=14)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
     now_date = pd.to_datetime(now_date).floor('60min') # floor to round hour
     datetime_sql = str(sql_files['DateTime'].iloc[0])
     
