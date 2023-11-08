@@ -29,7 +29,7 @@ def send_email(df):
         {0}
       </body>
     </html>
-    """.format(df.to_html(index=False, header=False))
+    """.format(df.to_html(index=False, header=False).replace('border="1"','border="0"'))
     multipart = MIMEMultipart()
     multipart["From"] = send_from
     multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca"
