@@ -60,9 +60,12 @@ for i in range(len(wx_stations)):
     print ('#### Checking live data for station file: ', wx_stations[i])
     sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 6", con = engine)
     
-    # calculate datetime for last 6 hours vs latest sql entry
+    # calculate datetime for last 6 hours (or 10 for Datlamen) vs latest sql entry
     #now_date = (datetime.datetime.now()- datetime.timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S") # for python PST system
-    now_date = (datetime.datetime.now()- datetime.timedelta(hours=14)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
+    if 'datlamen' not in wx_stations[i]:
+        now_date = (datetime.datetime.now()- datetime.timedelta(hours=14)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
+    else:
+        now_date = (datetime.datetime.now()- datetime.timedelta(hours=18)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
     now_date = pd.to_datetime(now_date).floor('60min') # floor to round hour
     datetime_sql = str(sql_files['DateTime'].iloc[0])
     
@@ -71,9 +74,12 @@ for i in range(len(wx_stations)):
     
     # if SQL does not have data for last 6 hours (i.e. there is a transmission
     # issue), warn!
-    if str(now_date) >= datetime_sql:
+    if str(now_date) >= datetime_sql and 'datlamen' not in wx_stations[i]:
         print('Found issue with transmissions for file:', wx_stations[i])  
         msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 6 hours for ' + wx_stations_name[i]
+    elif str(now_date) >= datetime_sql and 'datlamen' in wx_stations[i]:
+        print('Found issue with transmissions for file:', wx_stations[i])  
+        msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 10 hours for ' + wx_stations_name[i]
     else:
         print('No missing records for file:', wx_stations[i])  
 
