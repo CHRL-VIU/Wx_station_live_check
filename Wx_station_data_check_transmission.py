@@ -6,7 +6,6 @@
 # and checks if the live (last 12 hours) data is transmitting correctly for 
 # all stations. If not, the code alerts users via e-mail. Repeats every 12 hours
 # Written by J. Bodart
-import os
 import pandas as pd 
 import numpy as np
 import re
