@@ -3,10 +3,10 @@
 # version 1.0.0
 
 # This code reads in the SQL data from the Wx station on the VIU SQL database
-# and checks if the live (last 6 hours) data is transmitting correctly for 
-# all stations. If not, the code alerts users via e-mail. Repeats every 6hours
+# and checks if the live (last 12 hours) data is transmitting correctly for 
+# all stations. If not, the code alerts users via e-mail. Repeats every 12 hours
 # Written by J. Bodart
-
+import os
 import pandas as pd 
 import numpy as np
 import re
@@ -58,28 +58,29 @@ for i in range(len(wx_stations)):
     # 6 entries
     
     print ('#### Checking live data for station file: ', wx_stations[i])
-    sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 6", con = engine)
+    sql_files = pd.read_sql_query(sql="SELECT * FROM " + str(wx_stations[i]) + " ORDER BY DateTime DESC LIMIT 12", con = engine)
     
-    # calculate datetime for last 6 hours (or 10 for Datlamen) vs latest sql entry
+    # calculate datetime for last 12 hours (or 10 for Datlamen) vs latest sql entry
     #now_date = (datetime.datetime.now()- datetime.timedelta(hours=6)).strftime("%Y-%m-%d %H:%M:%S") # for python PST system
-    if 'datlamen' not in wx_stations[i]:
-        now_date = (datetime.datetime.now()- datetime.timedelta(hours=14)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
-    else:
-        now_date = (datetime.datetime.now()- datetime.timedelta(hours=18)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
+    #if 'datlamen' not in wx_stations[i]:
+    #    now_date = (datetime.datetime.now()- datetime.timedelta(hours=14)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
+    #else:
+    now_date = (datetime.datetime.now()- datetime.timedelta(hours=24)).strftime("%Y-%m-%d %H:%M:%S") # for Linux UTC system
     now_date = pd.to_datetime(now_date).floor('60min') # floor to round hour
     datetime_sql = str(sql_files['DateTime'].iloc[0])
     
     # replace None with nans in dataframe
     sql_files = sql_files.fillna(value=np.nan)
     
-    # if SQL does not have data for last 6 hours (i.e. there is a transmission
+    # if SQL does not have data for last 12 hours (i.e. there is a transmission
     # issue), warn!
-    if str(now_date) >= datetime_sql and 'datlamen' not in wx_stations[i]:
+    #if str(now_date) >= datetime_sql and 'datlamen' not in wx_stations[i]:
+    if str(now_date) >= datetime_sql:
         print('Found issue with transmissions for file:', wx_stations[i])  
-        msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 6 hours for ' + wx_stations_name[i]
-    elif str(now_date) >= datetime_sql and 'datlamen' in wx_stations[i]:
-        print('Found issue with transmissions for file:', wx_stations[i])  
-        msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 10 hours for ' + wx_stations_name[i]
+        msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 12 hours for ' + wx_stations_name[i]
+    #elif str(now_date) >= datetime_sql and 'datlamen' in wx_stations[i]:
+    #    print('Found issue with transmissions for file:', wx_stations[i])  
+    #    msg.loc[len(msg)] = 'Satellite data has not been transmitting for at least 10 hours for ' + wx_stations_name[i]
     else:
         print('No missing records for file:', wx_stations[i])  
 
@@ -96,4 +97,4 @@ while True:
 
 # write current time for sanity check
 current_dateTime = datetime.datetime.now()
-print("Done at:", current_dateTime, '- refreshing in 6 hours...')
+print("Done at:", current_dateTime, '- refreshing in 12 hours...')
