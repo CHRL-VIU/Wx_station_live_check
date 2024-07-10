@@ -32,7 +32,7 @@ def send_email(csv_filename, df):
     """
     multipart = MIMEMultipart()
     multipart["From"] = send_from
-    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca,sergey.marchenko@viu.ca"
+    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca,sergey.marchenko@viu.ca,ben.o'connor@viu.ca"
     multipart["Subject"] = subject  
     attachment = MIMEApplication(df.to_csv(sep =',', index=False, index_label=None))
     attachment["Content-Disposition"] = "attachment; filename={}".format(csv_filename)

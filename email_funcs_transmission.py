@@ -5,7 +5,7 @@
 # This code defines the function 'send_email' which is used to send an email 
 # from viuhydromet@outlook.com address to a recipient to alert that data
 # is not transmitting (either satellite transmission issue or issue with codes 
-# that plot the data onto the VIU hydromet website) for at least the last 6 hours
+# that plot the data onto the VIU hydromet website) for at least the last 12 hours
 # Written by J. Bodart
 
 from email.mime.application import MIMEApplication
@@ -21,7 +21,7 @@ email_details = config_emails.email_login()
 def send_email(df):
     send_from = email_details[0]
     password = email_details[1]
-    subject = 'Alert transmission issue VIU hydromet - last 6 hours'
+    subject = 'Alert transmission issue VIU hydromet - last 12 hours'
     message = """\
     <html>
       <head></head>
@@ -32,7 +32,7 @@ def send_email(df):
     """.format(df.to_html(index=False, header=False).replace('border="1"','border="0"'))
     multipart = MIMEMultipart()
     multipart["From"] = send_from
-    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca"
+    multipart["To"] = "bill.floyd@viu.ca,julien.bodart@viu.ca,anna.kaveney@viu.ca,ben.o'connor@viu.ca"
     multipart["Subject"] = subject  
     multipart.attach(MIMEText(message, "html"))
     server = smtplib.SMTP("smtp-mail.outlook.com", 587)
