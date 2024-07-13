@@ -46,7 +46,7 @@ wx_stations = wx_stations['Weather_stations'].tolist()
     
 # remove legacy data for Cairnridgerun and Upper and Main Russell as they are 
 # not connected to satellite
-wx_stations = [x for x in wx_stations if not "legacy_ontree" in x and not "russellmain" in x and not "machmell" in x and not "_test" in x and not "_archive" in x and not "_v2" in x]
+wx_stations = [x for x in wx_stations if not "legacy_ontree" in x and not "russellmain" in x and not "machmell" in x and not "_test" in x and not "_archive" in x and not "_v2" in x and not "placeglacier" in x]
 wx_stations_name = list(map(lambda st: str.replace(st, 'clean_', ''), wx_stations)) # remove 'clean_' for csv export
 wx_stations_name = [wx_name.capitalize() for wx_name in wx_stations_name] # capitalise station name
 
